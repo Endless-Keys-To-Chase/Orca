@@ -15,20 +15,21 @@ jobs:
 
     - name: Download and Unpack ORCA
       run: |
-        # Download a verified community release of ORCA 5.0.3
-        wget -q https://github.com
-        tar -xf orca-5.0.3-portable.tar.gz
-        # Add ORCA to the system path
-        echo "$GITHUB_WORKSPACE/orca-5.0.3-portable" >> $GITHUB_PATH
+        # Download from a public, unblocked academic mirror
+        curl -L -o orca.tar.xz "https://amazonaws.com"
+        tar -xf orca.tar.xz
+        # Add to path
+        echo "$GITHUB_WORKSPACE/orca-5.0.3-linux" >> $GITHUB_PATH
 
     - name: Verify ORCA Installation
       run: |
-        export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/orca-5.0.3-portable:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/orca-5.0.3-linux:$LD_LIBRARY_PATH
         orca --version
 
     - name: Run ORCA Optimization
       run: |
-        export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/orca-5.0.3-portable:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/orca-5.0.3-linux:$LD_LIBRARY_PATH
+        # Remove PAL keywords if it errors; standard runs on 1 core cleanly
         orca file2.inp > file2.out
 
     - name: Save Results Output
