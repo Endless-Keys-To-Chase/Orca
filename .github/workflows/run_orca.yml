@@ -3,28 +3,22 @@ name: Run ORCA Calculation
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Allows manual trigger button
+  workflow_dispatch: 
 
 jobs:
   quantum_chem:
     runs-on: ubuntu-latest
+    # This automatically pulls a verified, ready-to-use ORCA environment
+    container: 
+      image: docker.io/computationalchemistry/orca:5.0.3
 
     steps:
     - name: Checkout Repository Code
       uses: actions/checkout@v4
 
-    - name: Download Portable ORCA
-      run: |
-        # Download an unblocked Open-Source community copy of ORCA 5.0.3
-        curl -L -o orca.tar.gz "https://github.com"
-        tar -xf orca.tar.gz
-        echo "$GITHUB_WORKSPACE/orca-5.0.3-portable" >> $GITHUB_PATH
-
-    - name: Verify Installation
-      run: orca --version
-
     - name: Run ORCA Optimization
-      run: orca file2.inp > file2.out
+      run: |
+        /opt/orca/orca file2.inp > file2.out
 
     - name: Save Results Output
       uses: actions/upload-artifact@v4
